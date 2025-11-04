@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Happy Birthday, Peach!</title>
+    <link rel="icon" type="image/png" href="sfk.png">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('background.png') center/cover fixed no-repeat;
+            min-block-size: 100vh;
+            position: relative;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .blur-overlay {
+            position: fixed;
+            inset-block-start: 0;
+            inset-inline-start: 0;
+            inline-size: 100%;
+            block-size: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .floating-wishes {
+            position: fixed;
+            inset-block-start: 0;
+            inset-inline-start: 0;
+            inline-size: 100%;
+            block-size: 100%;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            padding: 5rem 2rem 3rem;
+            max-inline-size: 800px;
+            inline-size: 90%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bg-bubbles {
+            position: fixed;
+            inset-block-start: 0;
+            inset-inline-start: 0;
+            inline-size: 100%;
+            block-size: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .bg-bubbles li {
+            position: absolute;
+            list-style: none;
+            display: block;
+            inline-size: 40px;
+            block-size: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            inset-block-end: -160px;
+            animation: square 25s infinite;
+            border-radius: 50%;
+        }
+
+        .bg-bubbles li:nth-child(1) { inset-inline-start: 10%; animation-delay: 0s; }
+        .bg-bubbles li:nth-child(2) { inset-inline-start: 20%; animation-delay: 2s; animation-duration: 17s; }
+        .bg-bubbles li:nth-child(3) { inset-inline-start: 25%; animation-delay: 4s; }
+        .bg-bubbles li:nth-child(4) { inset-inline-start: 40%; animation-delay: 0s; animation-duration: 22s; }
+        .bg-bubbles li:nth-child(5) { inset-inline-start: 70%; animation-delay: 0s; }
+        .bg-bubbles li:nth-child(6) { inset-inline-start: 80%; animation-delay: 3s; }
+        .bg-bubbles li:nth-child(7) { inset-inline-start: 32%; animation-delay: 7s; }
+        .bg-bubbles li:nth-child(8) { inset-inline-start: 55%; animation-delay: 15s; animation-duration: 40s; }
+        .bg-bubbles li:nth-child(9) { inset-inline-start: 25%; animation-delay: 2s; animation-duration: 40s; }
+        .bg-bubbles li:nth-child(10) { inset-inline-start: 90%; animation-delay: 11s; }
+
+        @keyframes square {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; }
+        }
+
+        .trio-container {
+            display: inline-block;
+            vertical-align: middle;
+            opacity: 0;
+            transform: scale(0.8) translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .trio-container.visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .inline-sticker {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 6px;
+            max-inline-size: 60px;
+            max-block-size: 60px;
+            inline-size: auto;
+            block-size: auto;
+            pointer-events: none;
+            position: relative;
+            z-index: 4;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .sticker-left { animation-delay: 0s; }
+        .sticker-right { animation-delay: 1.5s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .name {
+            font-family: 'Great Vibes', cursive;
+            font-size: 5.5rem;
+            margin: 1.5rem 0;
+            letter-spacing: 3px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+            color: #ffebcd;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 6rem;
+            margin-block-end: 1.2rem;
+            display: inline-block;
+            vertical-align: middle;
+            color: #f0e6ff;
+            text-shadow: 0 4px 12px rgba(138, 43, 226, 0.4);
+            white-space: nowrap;
+            position: relative;
+        }
+
+        h1::before {
+            content: '🎉';
+            position: absolute;
+            inset-inline-start: -0.8em;
+            inset-block-start: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85em;
+            animation: emojiFloat 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes emojiFloat {
+            0%, 100% { transform: translateY(-50%) rotate(0deg); }
+            50% { transform: translateY(-50%) rotate(5deg); }
+        }
+
+        .sync-sticker {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 0 0 2px;
+            max-inline-size: 80px;
+            max-block-size: 80px;
+            inline-size: auto;
+            block-size: auto;
+            animation: float 6s ease-in-out infinite;
+            position: relative;
+            z-index: 4;
+        }
+
+        .animated-message {
+            max-inline-size: 620px;
+            margin: 0 auto 2rem;
+            text-align: center;
+        }
+
+        .animated-paragraph {
+            font-size: 1.25rem;
+            line-height: 1.7;
+            margin-block-end: 1.2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            color: white;
+        }
+
+        .animated-paragraph.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .signature {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.8rem;
+            margin-block-start: 1.5rem;
+            color: #ffebcd;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .sub-signature-pulse {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.2rem;
+            margin-block-start: 1.2rem;
+            color: #ffebcd;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            animation: pulse 3s infinite ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .sub-sticker {
+            block-size: 42px;
+            inline-size: auto;
+            vertical-align: middle;
+            animation: pulse 3s infinite ease-in-out;
+            animation-delay: 0.3s;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        .confetti-container {
+            position: fixed;
+            inset-block-start: 0;
+            inset-inline-start: 0;
+            inline-size: 100%;
+            block-size: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .confetti {
+            position: absolute;
+            inline-size: 10px;
+            block-size: 10px;
+            inset-block-start: -20px;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+        }
+
+        .wish-bubble-loop {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            padding: 10px 14px;
+            border-radius: 20px;
+            text-align: center;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 1;
+            max-inline-size: 85vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @keyframes floatUpLoop {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            85% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .wish-form-container {
+            position: relative;
+            z-index: 10;
+            margin-block-start: 1rem;
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            max-inline-size: 500px;
+            inline-size: 90%;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .wish-form-fields {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .wish-form-field {
+            flex: 1 1 200px;
+            min-inline-size: 140px;
+        }
+
+        .wish-form-input {
+            inline-size: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 8px 12px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .wish-form-input:focus {
+            border-color: #ff9a9e;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px rgba(255, 154, 158, 0.2);
+        }
+
+        .wish-form-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .wish-form-submit {
+            inline-size: 100%;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            border: none;
+            border-radius: 12px;
+            color: #5a2a27;
+            font-weight: 600;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+            margin-block-start: 0.6rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .wish-form-submit:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(255, 154, 158, 0.4);
+        }
+
+        .wish-form-submit:active {
+            transform: scale(0.98);
+        }
+
+        .wish-form-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .rate-limit-msg {
+            position: absolute;
+            inset-block-start: 100%;
+            inset-inline-start: 50%;
+            transform: translateX(-50%);
+            background: rgba(220, 20, 60, 0.8);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 11;
+            opacity: 0;
+            transition: opacity 0.3s;
+            margin-block-start: 6px;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .btn-emoji {
+            inline-size: 20px;
+            block-size: 20px;
+        }
+
+        @media (max-inline-size: 480px) {
+            .wish-form-container {
+                padding: 0.6rem;
+                margin-block-start: 0.8rem;
+                margin-block-end: 0.8rem;
+                border-radius: 14px;
+                background: rgba(0, 0, 0, 0.15);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                inline-size: 95%;
+            }
+            .wish-form-fields {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .wish-form-field {
+                min-inline-size: 100%;
+            }
+            .wish-form-input {
+                padding: 6px 10px;
+                border-radius: 10px;
+                font-size: 0.85rem;
+            }
+            .wish-form-submit {
+                padding: 6px 10px;
+                margin-block-start: 0.5rem;
+                border-radius: 10px;
+                font-size: 0.85rem;
+            }
+            .rate-limit-msg {
+                font-size: 0.75rem;
+                padding: 3px 10px;
+                margin-block-start: 5px;
+            }
+
+            .wish-bubble-loop {
+                font-size: 0.75rem;
+                padding: 6px 10px;
+                max-inline-size: 90vw;
+            }
+
+            h1 { font-size: 3rem; }
+            .name { font-size: 2.5rem; letter-spacing: 2px; }
+            .animated-paragraph {
+                font-size: 1rem;
+                margin-block-end: 0.9rem;
+            }
+            .inline-sticker { max-inline-size: 40px; max-block-size: 40px; }
+            h1::before { font-size: 0.75em; inset-inline-start: -0.6em; }
+            .sync-sticker { max-inline-size: 50px; max-block-size: 50px; }
+            .signature { font-size: 2.2rem; }
+            .sub-signature-pulse {
+                font-size: 1.5rem;
+                gap: 8px;
+            }
+            .sub-sticker {
+                block-size: 30px;
+            }
+        }
+
+        @media (max-inline-size: 768px) and (min-inline-size: 481px) {
+            .wish-form-container {
+                padding: 0.7rem;
+                margin-block-start: 1rem;
+                border-radius: 15px;
+                background: rgba(0, 0, 0, 0.18);
+            }
+            .wish-form-input {
+                padding: 7px 11px;
+                border-radius: 11px;
+                font-size: 0.88rem;
+            }
+            .wish-form-submit {
+                padding: 7px 11px;
+                margin-block-start: 0.55rem;
+                border-radius: 11px;
+                font-size: 0.88rem;
+            }
+
+            h1 { font-size: 4rem; }
+            .name { font-size: 3.5rem; }
+            .animated-paragraph {
+                font-size: 1.1rem;
+                margin-block-end: 1rem;
+            }
+            .inline-sticker { max-inline-size: 45px; max-block-size: 45px; }
+            h1::before { font-size: 0.8em; inset-inline-start: -0.7em; }
+            .sync-sticker { max-inline-size: 60px; max-block-size: 60px; }
+            .signature { font-size: 2.4rem; }
+            .sub-signature-pulse {
+                font-size: 1.8rem;
+                gap: 10px;
+            }
+            .sub-sticker {
+                block-size: 36px;
+            }
+        }
+        /* Balloons */
+        .balloon-container {
+            position: fixed;
+            inset-inline-start: 0;
+            inset-block-end: -10vh;
+            inline-size: 100%;
+            pointer-events: none;
+            z-index: 2;
+            overflow: visible;
+        }
+
+        .balloon {
+            position: absolute;
+            inset-block-end: -120px;
+            inline-size: 48px;
+            block-size: 64px;
+            border-radius: 50% 50% 50% 50%;
+            transform-origin: 50% 80%;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            opacity: 0.95;
+            animation: rise var(--rise, 8s) linear forwards, sway var(--sway, 3s) ease-in-out infinite;
+        }
+
+        .balloon::after {
+            content: '';
+            position: absolute;
+            inset-inline-start: 50%;
+            inset-block-start: 100%;
+            inline-size: 2px;
+            block-size: 40px;
+            background: rgba(255,255,255,0.25);
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        @keyframes rise {
+            to { transform: translateY(-120vh) scale(1.02); opacity: 0; }
+        }
+
+        @keyframes sway {
+            0% { transform: translateX(0) rotate(-4deg); }
+            50% { transform: translateX(22px) rotate(6deg); }
+            100% { transform: translateX(0) rotate(-4deg); }
+        }
+
+        /* Friends word cloud */
+        .friends-section {
+            margin-block-start: 1.5rem;
+            text-align: center;
+            z-index: 3;
+        }
+
+        .friends-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            margin-block-end: 0.75rem;
+            color: #fff8f0;
+            text-shadow: 0 3px 10px rgba(0,0,0,0.35);
+        }
+
+        .word-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 12px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .word-cloud .word {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #fff;
+            transition: transform 0.15s ease, background 0.15s ease;
+            cursor: default;
+            user-select: none;
+        }
+
+        .word-cloud .word:hover {
+            transform: scale(1.06);
+            background: rgba(255,255,255,0.12);
+        }
+
+        .friend-form {
+            display:flex;
+            gap:8px;
+            justify-content:center;
+            margin-block-start:0.75rem;
+            flex-wrap:wrap;
+        }
+
+        .friend-form input { padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.12); background: rgba(0,0,0,0.25); color: white; }
+
+        /* Locked recording */
+        .locked-recording {
+            margin-block-start: 1.25rem;
+            text-align: center;
+            position: relative;
+            z-index: 4;
+        }
+
+        .locked-recording h2 {
+            font-size: 1.4rem;
+            color: #fffbe6;
+            margin-block-end: 0.6rem;
+        }
+
+        .recording-box {
+            display: inline-block;
+            background: rgba(0,0,0,0.28);
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 14px;
+            border-radius: 12px;
+            min-inline-size: 260px;
+            max-inline-size: 560px;
+            inline-size: 85%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recording-placeholder {
+            display:flex;
+            gap:12px;
+            align-items:center;
+            justify-content:center;
+            color: #fff;
+            font-size: 0.95rem;
+            opacity: 0.95;
+        }
+
+        .lock-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0.6));
+            gap: 8px;
+            padding: 12px;
+            flex-wrap: wrap;
+        }
+
+        .lock-overlay input[type="password"] {
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+            color: white;
+            outline: none;
+            min-inline-size: 140px;
+        }
+
+        .unlock-btn {
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg,#ffd3a5,#ff9a9e);
+            color: #5a2a27;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .unlock-msg { font-size: 0.9rem; color: #cfe9ff; }
+        .download-link {
+            display:inline-block;
+            margin-block-start:8px;
+            padding:8px 12px;
+            border-radius:10px;
+            background: linear-gradient(135deg,#cfe9ff,#a1c4fd);
+            color: #3a2b2b;
+            text-decoration: none;
+            font-weight:600;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="blur-overlay"></div>
+
+    <ul class="bg-bubbles">
+        <li></li><li></li><li></li><li></li><li></li>
+        <li></li><li></li><li></li><li></li><li></li>
+    </ul>
+
+    <div class="confetti-container" id="confetti"></div>
+
+    <div class="container">
+        <span class="trio-container" id="trioContainer">
+            <h1>Happy Birthday!</h1>
+            <img src="shb.png" alt="Birthday Celebration" class="sync-sticker">
+        </span>
+        
+        <span class="scroll-item" style="display: inline-block; vertical-align: middle; margin-block-start: 1rem;">
+            <span class="name">Peach</span>
+            <img src="sbn.png" alt="Birthday Celebration" class="inline-sticker sticker-right">
+        </span>
+
+        <div class="animated-message" id="animatedMessage">
+            <p class="animated-paragraph">Okay okay LISTEN UP — it's your big day!!! Big feels, big vibes, big energy, BIG everything 😤🎂</p>
+            <p class="animated-paragraph">I seriously wish you the best of the best. You deserve everything good that life has to offer (and maybe a lil chaos too, just to keep things spicy 😏).</p>
+            <p class="animated-paragraph">You've always been that person — the hardworking, chaotic ray of joy who somehow lights up every VC, every chat, every single moment. Like fr, without you the VCs are dead silent 💀 I probably wouldn't have even opened my mic if it weren't for you. You're the vibe, the mood, the whole festival 🪩</p>
+            <p class="animated-paragraph">I hope life keeps spoiling you — good marks, peace, sleep, FOOD (lots of it, please). May your plate never be empty, your WiFi never lag, and your stomach never growl 😋</p>
+            <p class="animated-paragraph"><strong>ALSOOO, listen here 👀</strong><br>I'm giving you 3 WISHES. Yup, official "me" wishes.<br>But the twist is… I decide how to fulfill them 😌 You can claim them anytime, anywhere, however you want. So use them wisely or chaotically, I don't mind 😭</p>
+            <p class="animated-paragraph">That's it, that's my emotional + dramatic speech done 🫶<br>Happyyy birthday once again, Peach 💕<br>Keep being the pure ball of joy you are. Never stop shining, never stop laughing — the world's better with you in it 💫</p>
+        </div>
+
+        <div class="signature scroll-item">With Warmest Wishes</div>
+        
+        <div class="sub-signature-pulse scroll-item">
+            Send your wish and make it float to Kavya<img src="sfk.png" alt="Sticker" class="sub-sticker">
+        </div>
+
+        <div class="wish-form-container scroll-item">
+            <div class="wish-form-fields">
+                <div class="wish-form-field">
+                    <input type="text" id="wishName" class="wish-form-input" placeholder="Your name" maxlength="20" />
+                </div>
+                <div class="wish-form-field">
+                    <input type="text" id="wishMessage" class="wish-form-input" placeholder="Your wish for Kavya" maxlength="80" required />
+                </div>
+            </div>
+            <button type="submit" id="wishSubmitBtn" class="wish-form-submit">
+                <img src="https://cdn.discordapp.com/emojis/1431524456089780265.gif?size=24&quality=lossless" class="btn-emoji">Send Wish
+            </button>
+            <div class="rate-limit-msg" id="rateLimitMsg">You've already sent a wish! Reload to send again.</div>
+        </div>
+        
+        <!-- Friends word-cloud section -->
+        <section class="friends-section scroll-item" aria-labelledby="friendsTitle">
+            <h2 id="friendsTitle">Friends' one-word descriptions</h2>
+            <div class="word-cloud" id="wordCloud" aria-live="polite"></div>
+
+            <form id="friendForm" class="friend-form" onsubmit="return false;">
+                <input id="friendName" placeholder="Friend's name" maxlength="20" />
+                <input id="friendWord" placeholder="One-word description" maxlength="20" />
+                <button id="addFriendBtn" class="wish-form-submit">Add</button>
+            </form>
+        </section>
+
+        <!-- Balloon container (floating balloons) -->
+        <div class="balloon-container" id="balloonContainer" aria-hidden="true"></div>
+        
+        <!-- Private recording (locked by password) -->
+        <section class="locked-recording scroll-item" aria-labelledby="recTitle">
+            <h2 id="recTitle">Private Recording</h2>
+            <div class="recording-box" id="recordingBox">
+                <div class="recording-placeholder" id="recordingPlaceholder">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 3v10" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 7a4 4 0 0 0 8 0" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div>
+                        <div style="font-weight:600;">Locked recording</div>
+                        <div style="font-size:0.85rem; opacity:0.9;">Enter the password to unlock and play</div>
+                    </div>
+                </div>
+                <div class="lock-overlay" id="lockOverlay">
+                    <input id="recordingPassword" type="password" placeholder="Enter password" aria-label="Recording password" />
+                    <button id="unlockRecordingBtn" class="unlock-btn">Unlock</button>
+                    <div id="unlockStatus" class="unlock-msg" aria-live="polite"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="floating-wishes"></div>
+
+    <script>
+        const BIN_ID = "6908de2dd0ea881f40d144b2"; 
+        const API_KEY = "$2a$10$r8r9SEk0iSR9RnqoJN.45u7.KbQUz96AUfEfrZZzOHgXmgpJUJvv.";
+
+        const activeBubbles = new Set();
+        const HAS_SENT_KEY = 'birthdayWishSent';
+        let allWishes = [];
+
+        function generateFallbackName() {
+            const prefixes = ['Happy','Sunny','Star','Sweet','Lovely','Joyful','Cheery','Bright'];
+            const suffixes = ['Wisher','Friend','Fan','Pal','Wellwisher','Buddy'];
+            return `${prefixes[Math.floor(Math.random() * prefixes.length)]}${suffixes[Math.floor(Math.random() * suffixes.length)]}${Math.floor(Math.random() * 900) + 100}`;
+        }
+
+        function createLoopingWishBubble(text, id) {
+            if (activeBubbles.has(id)) return;
+
+            const bubble = document.createElement('div');
+            bubble.className = 'wish-bubble-loop';
+            bubble.textContent = `🎂 ${text}`;
+            bubble.style.fontSize = `${0.85 + Math.random() * 0.15}rem`;
+            bubble.style.left = `${Math.random() * 70 + 15}%`;
+
+            const startTop = window.innerHeight + 20;
+            bubble.style.top = `${startTop}px`;
+
+            const duration = 25 + Math.random() * 5;
+            
+            bubble.style.animation = `floatUpLoop ${duration}s linear infinite`;
+
+            document.querySelector('.floating-wishes').appendChild(bubble);
+
+            bubble.addEventListener('animationiteration', () => {
+                bubble.style.top = `${window.innerHeight + 20}px`;
+                bubble.style.left = `${Math.random() * 70 + 15}%`;
+            });
+
+            activeBubbles.add(id);
+        }
+
+        async function getCurrentWishes() {
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { 
+                        "X-Master-Key": API_KEY,
+                        "X-Bin-Meta": false
+                    }
+                });
+                
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                
+                const data = await res.json();
+                
+                if (Array.isArray(data)) {
+                    return data;
+                } else if (data.record && Array.isArray(data.record)) {
+                    return data.record;
+                } else if (typeof data === 'object' && data.text) {
+                    return [data];
+                } else {
+                    return [];
+                }
+            } catch (e) {
+                console.log("Error fetching wishes:", e);
+                return [];
+            }
+        }
+
+        async function saveWish(fullMessage) {
+            try {
+                const current = await getCurrentWishes();
+                
+                let updated = Array.isArray(current) ? current : [];
+                
+                updated.push({ 
+                    text: fullMessage, 
+                    timestamp: Date.now(),
+                    id: Date.now() + Math.random()
+                });
+                
+                if (updated.length > 50) {
+                    updated = updated.slice(-50);
+                }
+                
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": API_KEY
+                    },
+                    body: JSON.stringify(updated)
+                });
+                
+                return res.ok;
+            } catch (e) {
+                console.log("Save error:", e);
+                return false;
+            }
+        }
+
+        let lastWishCount = 0;
+        async function pollForNewWishes() {
+            try {
+                const wishes = await getCurrentWishes();
+                
+                if (wishes.length > lastWishCount) {
+                    for (let i = lastWishCount; i < wishes.length; i++) {
+                        const wish = wishes[i];
+                        createLoopingWishBubble(wish.text, `wish-${wish.id || i}`);
+                    }
+                    lastWishCount = wishes.length;
+                }
+            } catch (e) {
+                console.log("Polling error:", e);
+            }
+            setTimeout(pollForNewWishes, 4000);
+        }
+
+        function initializeWishes() {
+            (async () => {
+                try {
+                    const wishes = await getCurrentWishes();
+                    allWishes = wishes;
+                    lastWishCount = wishes.length;
+                    
+                    wishes.forEach((wish, i) => {
+                        setTimeout(() => {
+                            createLoopingWishBubble(wish.text, `wish-${wish.id || i}`);
+                        }, i * 500);
+                    });
+                    
+                    pollForNewWishes();
+                } catch (error) {
+                    console.log('Initialization error:', error);
+                }
+            })();
+        }
+
+        document.getElementById('wishSubmitBtn').addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this;
+            const nameInput = document.getElementById('wishName');
+            const messageInput = document.getElementById('wishMessage');
+            const rateLimitMsg = document.getElementById('rateLimitMsg');
+
+            if (sessionStorage.getItem(HAS_SENT_KEY)) {
+                rateLimitMsg.style.opacity = '1';
+                setTimeout(() => {
+                    rateLimitMsg.style.opacity = '0';
+                }, 3000);
+                return;
+            }
+
+            const name = nameInput.value.trim().substring(0, 20);
+            const msg = messageInput.value.trim().substring(0, 80);
+            
+            if (!msg || msg.length < 3) {
+                alert("Please enter a wish message (at least 3 characters)!");
+                return;
+            }
+
+            const displayName = name || generateFallbackName();
+            const fullMessage = `${msg} — ${displayName}`;
+
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = '<img src="https://cdn.discordapp.com/emojis/1431524456089780265.gif?size=24&quality=lossless" class="btn-emoji">Sending...';
+
+            try {
+                const success = await saveWish(fullMessage);
+                
+                if (success) {
+                    sessionStorage.setItem(HAS_SENT_KEY, 'true');
+                    nameInput.disabled = true;
+                    messageInput.disabled = true;
+                    submitBtn.innerHTML = '✅ Sent!';
+                    submitBtn.disabled = true;
+                    
+                    createLoopingWishBubble(fullMessage, `local-${Date.now()}`);
+                    lastWishCount++;
+                    
+                    rateLimitMsg.textContent = 'Wish sent successfully!';
+                    rateLimitMsg.style.background = 'rgba(34, 197, 94, 0.8)';
+                    rateLimitMsg.style.opacity = '1';
+                    
+                    setTimeout(() => {
+                        rateLimitMsg.style.opacity = '0';
+                    }, 3000);
+                    
+                } else {
+                    throw new Error('Failed to save to JSONBin');
+                }
+            } catch (error) {
+                console.error('Submit error:', error);
+                submitBtn.innerHTML = '<img src="https://cdn.discordapp.com/emojis/1431524456089780265.gif?size=24&quality=lossless" class="btn-emoji">Send Wish';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+                
+                alert("Failed to send wish. Please check your connection and try again!");
+            }
+        });
+
+        function createConfetti() {
+            const container = document.getElementById('confetti');
+            const colors = ['#ff9a9e', '#fad0c4', '#a1c4fd', '#c2e9fb'];
+            for (let i = 0; i < 60; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confetti.style.width = (Math.random() * 6 + 4) + 'px';
+                confetti.style.height = confetti.style.width;
+                container.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+        createConfetti();
+        setInterval(createConfetti, 4000);
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.scroll-item, .animated-paragraph').forEach(el => {
+            observer.observe(el);
+        });
+
+        setTimeout(() => {
+            document.getElementById('trioContainer').classList.add('visible');
+        }, 500);
+
+        window.addEventListener('load', initializeWishes);
+        
+        if (document.readyState === 'complete') {
+            initializeWishes();
+        }
+
+        /* --- Friends word-cloud and balloons --- */
+        (function(){
+            const defaultFriends = [
+                { name: 'Asha', word: 'Kind' },
+                { name: 'Ravi', word: 'Cheeky' },
+                { name: 'Nina', word: 'Brave' },
+                { name: 'Sam', word: 'Loyal' },
+                { name: 'Maya', word: 'Radiant' }
+            ];
+
+            const STORAGE_KEY = 'peachFriendsV1';
+            let friends = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || defaultFriends.slice();
+
+            function renderWordCloud() {
+                const container = document.getElementById('wordCloud');
+                container.innerHTML = '';
+                friends.forEach((f, i) => {
+                    const el = document.createElement('div');
+                    el.className = 'word';
+                    el.title = `${f.name}: ${f.word}`;
+                    el.textContent = f.word;
+                    // scale font-size a bit by name length and index for variety
+                    const size = 0.9 + Math.min(1.0, (f.word.length / 8) + (i % 3) * 0.12);
+                    el.style.fontSize = `${size}rem`;
+                    el.addEventListener('click', () => {
+                        // small pop animation
+                        el.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.08)' }, { transform: 'scale(1)' }], { duration: 260 });
+                    });
+                    container.appendChild(el);
+                });
+            }
+
+            function addFriend(name, word) {
+                if (!word || word.trim().length === 0) return false;
+                friends.push({ name: (name||'Friend').trim(), word: word.trim() });
+                // keep small
+                if (friends.length > 40) friends = friends.slice(-40);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(friends));
+                renderWordCloud();
+                return true;
+            }
+
+            document.getElementById('addFriendBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('friendName').value.trim();
+                const word = document.getElementById('friendWord').value.trim();
+                if (!word) {
+                    alert('Please enter a one-word description.');
+                    return;
+                }
+                if (addFriend(name, word)) {
+                    document.getElementById('friendName').value = '';
+                    document.getElementById('friendWord').value = '';
+                }
+            });
+
+            // Balloons: generate occasional balloons for a celebratory vibe
+            function makeBalloon() {
+                const container = document.getElementById('balloonContainer');
+                if (!container) return;
+                const colors = ['linear-gradient(135deg,#ff9a9e,#ff6a88)', 'linear-gradient(135deg,#c2e9fb,#a1c4fd)', 'linear-gradient(135deg,#fddb92,#d1fdff)', 'linear-gradient(135deg,#f6d365,#fda085)'];
+                const el = document.createElement('div');
+                el.className = 'balloon';
+                el.style.background = colors[Math.floor(Math.random()*colors.length)];
+                const left = Math.random() * 92 + 2; // keep inside edges
+                el.style.left = left + 'vw';
+                const rise = 6 + Math.random() * 6; // 6-12s
+                const sway = 2 + Math.random() * 3;
+                el.style.setProperty('--rise', rise + 's');
+                el.style.setProperty('--sway', sway + 's');
+                // slight size variance
+                const size = 36 + Math.random() * 36;
+                el.style.width = size + 'px';
+                el.style.height = Math.round(size * 1.25) + 'px';
+                container.appendChild(el);
+                // cleanup after animation
+                setTimeout(() => {
+                    el.remove();
+                }, (rise * 1000) + 1200);
+            }
+
+            // initial render + periodic generation
+            renderWordCloud();
+            // make a few balloons immediately
+            for (let i=0;i<6;i++) setTimeout(makeBalloon, i*450);
+            // then create them periodically
+            setInterval(() => {
+                // sometimes spawn a small burst
+                const burst = Math.random() < 0.25;
+                const count = burst ? 4 + Math.floor(Math.random()*6) : 1 + Math.floor(Math.random()*2);
+                for (let i=0;i<count;i++) setTimeout(makeBalloon, i*220);
+            }, 4200);
+        })();
+
+        /* --- Locked recording logic --- */
+        (function(){
+            // NOTE: This is client-side password protection (editable in the page).
+            // If you want server-side protection, we can wire this to a backend.
+            const RECORDING_SESSION_KEY = 'privateRecordingUnlocked';
+            // Change this default password by editing the string below.
+            const CORRECT_PASSWORD = 'peach123';
+            // Set the recording file path here (relative or absolute). The src will be assigned only after unlock.
+            const RECORDING_SRC = 'recording.mp3';
+
+            const unlockBtn = document.getElementById('unlockRecordingBtn');
+            const pwdInput = document.getElementById('recordingPassword');
+            const overlay = document.getElementById('lockOverlay');
+            const placeholder = document.getElementById('recordingPlaceholder');
+            const status = document.getElementById('unlockStatus');
+
+            function showMessage(msg, color){
+                status.textContent = msg;
+                status.style.color = color || '#cfe9ff';
+            }
+
+            function unlockRecording() {
+                // reveal audio player and set source
+                if (!document.getElementById('privateAudio')) {
+                    const audio = document.createElement('audio');
+                    audio.id = 'privateAudio';
+                    audio.controls = true;
+                    audio.style.width = '100%';
+                    // store src in a data attribute until unlocked
+                    audio.src = RECORDING_SRC;
+                    // replace placeholder
+                    placeholder.style.display = 'none';
+                    overlay.style.display = 'none';
+                    const box = document.getElementById('recordingBox');
+                    box.appendChild(audio);
+
+                    // Add a small download link for convenience
+                    const dl = document.createElement('a');
+                    dl.className = 'download-link';
+                    dl.href = RECORDING_SRC;
+                    dl.download = '';
+                    dl.textContent = 'Download recording';
+                    dl.setAttribute('aria-label', 'Download recording');
+                    box.appendChild(dl);
+
+                    try { audio.focus(); } catch(e){}
+                }
+                sessionStorage.setItem(RECORDING_SESSION_KEY, '1');
+                showMessage('Unlocked — enjoy!', '#b6f2b0');
+            }
+
+            unlockBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const val = (pwdInput.value || '').trim();
+                if (!val) { showMessage('Please enter a password', '#ffd3d3'); return; }
+                if (val === CORRECT_PASSWORD) {
+                    unlockRecording();
+                } else {
+                    showMessage('Incorrect password', '#ffd3d3');
+                    // small shake
+                    overlay.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-6px)' }, { transform: 'translateY(0)' }], { duration: 250 });
+                }
+            });
+
+            // allow Enter key
+            pwdInput.addEventListener('keydown', (ev) => {
+                if (ev.key === 'Enter') {
+                    ev.preventDefault();
+                    unlockBtn.click();
+                }
+            });
+
+            // If session unlocked previously, unlock automatically
+            if (sessionStorage.getItem(RECORDING_SESSION_KEY)) {
+                unlockRecording();
+            }
+        })();
+    </script>
+</body>
+</html>

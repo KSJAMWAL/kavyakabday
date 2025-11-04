@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="sfk.png">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
     <style>
+        /* ... All your CSS styles ... */
         * {
             margin: 0;
             padding: 0;
@@ -681,7 +682,6 @@
             font-weight:600;
         }
 
-
     </style>
 </head>
 <body>
@@ -735,7 +735,6 @@
             <div class="rate-limit-msg" id="rateLimitMsg">You've already sent a wish! Reload to send again.</div>
         </div>
         
-        <!-- Friends word-cloud section -->
         <section class="friends-section scroll-item" aria-labelledby="friendsTitle">
             <h2 id="friendsTitle">Friends' one-word descriptions</h2>
             <div class="word-cloud" id="wordCloud" aria-live="polite"></div>
@@ -747,10 +746,8 @@
             </form>
         </section>
 
-        <!-- Balloon container (floating balloons) -->
         <div class="balloon-container" id="balloonContainer" aria-hidden="true"></div>
         
-        <!-- Private recording (locked by password) -->
         <section class="locked-recording scroll-item" aria-labelledby="recTitle">
             <h2 id="recTitle">Private Recording</h2>
             <div class="recording-box" id="recordingBox">
@@ -773,8 +770,10 @@
     <div class="floating-wishes"></div>
 
     <script>
-        const BIN_ID = "6908de2dd0ea881f40d144b2"; 
-        const API_KEY = "$2a$10$r8r9SEk0iSR9RnqoJN.45u7.KbQUz96AUfEfrZZzOHgXmgpJUJvv.";
+        // These are NO LONGER needed here. They go in your backend.
+        // const BIN_ID = "6908de2dd0ea881f40d144b2"; 
+        // const FRIENDS_BIN_ID = "6908de2dd0ea881f40d144b3";
+        // const API_KEY = "SECRET_KEY_REMOVED_FOR_SECURITY";
 
         const activeBubbles = new Set();
         const HAS_SENT_KEY = 'birthdayWishSent';
@@ -814,28 +813,16 @@
 
         async function getCurrentWishes() {
             try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                    headers: { 
-                        "X-Master-Key": API_KEY,
-                        "X-Bin-Meta": false
-                    }
-                });
+                // CHANGED: Fetch from your own backend API
+                const res = await fetch(`/api/wishes`); 
                 
                 if (!res.ok) {
                     throw new Error(`HTTP error! status: ${res.status}`);
                 }
                 
                 const data = await res.json();
-                
-                if (Array.isArray(data)) {
-                    return data;
-                } else if (data.record && Array.isArray(data.record)) {
-                    return data.record;
-                } else if (typeof data === 'object' && data.text) {
-                    return [data];
-                } else {
-                    return [];
-                }
+                return Array.isArray(data) ? data : [];
+
             } catch (e) {
                 console.log("Error fetching wishes:", e);
                 return [];
@@ -844,27 +831,13 @@
 
         async function saveWish(fullMessage) {
             try {
-                const current = await getCurrentWishes();
-                
-                let updated = Array.isArray(current) ? current : [];
-                
-                updated.push({ 
-                    text: fullMessage, 
-                    timestamp: Date.now(),
-                    id: Date.now() + Math.random()
-                });
-                
-                if (updated.length > 50) {
-                    updated = updated.slice(-50);
-                }
-                
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-                    method: "PUT",
+                // CHANGED: POST to your own backend API
+                const res = await fetch(`/api/wishes`, {
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-Master-Key": API_KEY
                     },
-                    body: JSON.stringify(updated)
+                    body: JSON.stringify({ text: fullMessage })
                 });
                 
                 return res.ok;
@@ -892,24 +865,22 @@
             setTimeout(pollForNewWishes, 4000);
         }
 
-        function initializeWishes() {
-            (async () => {
-                try {
-                    const wishes = await getCurrentWishes();
-                    allWishes = wishes;
-                    lastWishCount = wishes.length;
-                    
-                    wishes.forEach((wish, i) => {
-                        setTimeout(() => {
-                            createLoopingWishBubble(wish.text, `wish-${wish.id || i}`);
-                        }, i * 500);
-                    });
-                    
-                    pollForNewWishes();
-                } catch (error) {
-                    console.log('Initialization error:', error);
-                }
-            })();
+        async function initializeWishes() {
+            try {
+                const wishes = await getCurrentWishes();
+                allWishes = wishes;
+                lastWishCount = wishes.length;
+                
+                wishes.forEach((wish, i) => {
+                    setTimeout(() => {
+                        createLoopingWishBubble(wish.text, `wish-${wish.id || i}`);
+                    }, i * 500);
+                });
+                
+                pollForNewWishes();
+            } catch (error) {
+                console.log('Initialization error:', error);
+            }
         }
 
         document.getElementById('wishSubmitBtn').addEventListener('click', async function(e) {
@@ -965,7 +936,7 @@
                     }, 3000);
                     
                 } else {
-                    throw new Error('Failed to save to JSONBin');
+                    throw new Error('Failed to save to backend');
                 }
             } catch (error) {
                 console.error('Submit error:', error);
@@ -1012,66 +983,115 @@
         setTimeout(() => {
             document.getElementById('trioContainer').classList.add('visible');
         }, 500);
-
-        window.addEventListener('load', initializeWishes);
         
-        if (document.readyState === 'complete') {
+        // --- FIXED: Load both wishes and friends ---
+        function loadAllData() {
             initializeWishes();
+            getFriendDescriptions(); // <-- FIX #2: Call the function
+        }
+
+        window.addEventListener('load', loadAllData);
+        if (document.readyState === 'complete') {
+            loadAllData();
         }
 
         /* --- Friends word-cloud and balloons --- */
         (function(){
-            const defaultFriends = [
-                { name: 'Asha', word: 'Kind' },
-                { name: 'Ravi', word: 'Cheeky' },
-                { name: 'Nina', word: 'Brave' },
-                { name: 'Sam', word: 'Loyal' },
-                { name: 'Maya', word: 'Radiant' }
-            ];
-
-            const STORAGE_KEY = 'peachFriendsV1';
-            let friends = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || defaultFriends.slice();
-
+            let friends = [];
+            const cloudContainer = document.getElementById('wordCloud');
+            
             function renderWordCloud() {
-                const container = document.getElementById('wordCloud');
-                container.innerHTML = '';
+                cloudContainer.innerHTML = '';
+                if (!friends.length) {
+                    cloudContainer.innerHTML = '<div style="opacity:0.8;padding:10px;">No friend descriptions yet. Be the first to add one!</div>';
+                    return;
+                }
                 friends.forEach((f, i) => {
                     const el = document.createElement('div');
                     el.className = 'word';
                     el.title = `${f.name}: ${f.word}`;
                     el.textContent = f.word;
-                    // scale font-size a bit by name length and index for variety
                     const size = 0.9 + Math.min(1.0, (f.word.length / 8) + (i % 3) * 0.12);
                     el.style.fontSize = `${size}rem`;
                     el.addEventListener('click', () => {
-                        // small pop animation
                         el.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.08)' }, { transform: 'scale(1)' }], { duration: 260 });
                     });
-                    container.appendChild(el);
+                    cloudContainer.appendChild(el);
                 });
             }
 
-            function addFriend(name, word) {
+            async function saveFriendDescription(name, word) {
                 if (!word || word.trim().length === 0) return false;
-                friends.push({ name: (name||'Friend').trim(), word: word.trim() });
-                // keep small
-                if (friends.length > 40) friends = friends.slice(-40);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(friends));
-                renderWordCloud();
-                return true;
+                
+                try {
+                    const newFriend = { 
+                        name: (name||'Friend').trim(), 
+                        word: word.trim(),
+                        timestamp: Date.now()
+                    };
+                    
+                    // CHANGED: POST to your own backend API
+                    const res = await fetch(`/api/friends`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(newFriend)
+                    });
+                    
+                    if (res.ok) {
+                        const updatedFriends = await res.json();
+                        friends = updatedFriends;
+                        renderWordCloud();
+                        return true;
+                    } else {
+                        throw new Error('Failed to save friend description');
+                    }
+                } catch (e) {
+                    console.error('Save error:', e);
+                    alert('Failed to save friend description. Please try again!');
+                    return false;
+                }
             }
 
-            document.getElementById('addFriendBtn').addEventListener('click', (e) => {
+            // This function needs to be globally accessible for loadAllData()
+            window.getFriendDescriptions = async function() {
+                try {
+                    // CHANGED: Fetch from your own backend API
+                    const res = await fetch(`/api/friends`);
+                    
+                    if (!res.ok) {
+                        throw new Error(`HTTP error! status: ${res.status}`);
+                    }
+                    
+                    const data = await res.json();
+                    
+                    friends = Array.isArray(data) ? data : [];
+                    renderWordCloud();
+                } catch (e) {
+                    console.log("Error fetching friend descriptions:", e);
+                    cloudContainer.innerHTML = '<div style="color:#ffcdd2;padding:10px;">Failed to load friend descriptions. Please try again later.</div>';
+                }
+            }
+
+            document.getElementById('addFriendBtn').addEventListener('click', async (e) => {
                 e.preventDefault();
-                const name = document.getElementById('friendName').value.trim();
-                const word = document.getElementById('friendWord').value.trim();
+                const nameInput = document.getElementById('friendName');
+                const wordInput = document.getElementById('friendWord');
+                const name = nameInput.value.trim();
+                const word = wordInput.value.trim();
+
                 if (!word) {
                     alert('Please enter a one-word description.');
                     return;
                 }
-                if (addFriend(name, word)) {
-                    document.getElementById('friendName').value = '';
-                    document.getElementById('friendWord').value = '';
+                
+                // --- FIX #1: Call the correct function ---
+                const success = await saveFriendDescription(name, word); 
+                
+                if (success) {
+                    nameInput.value = '';
+                    wordInput.value = '';
                 }
             });
 
@@ -1089,12 +1109,10 @@
                 const sway = 2 + Math.random() * 3;
                 el.style.setProperty('--rise', rise + 's');
                 el.style.setProperty('--sway', sway + 's');
-                // slight size variance
                 const size = 36 + Math.random() * 36;
                 el.style.width = size + 'px';
                 el.style.height = Math.round(size * 1.25) + 'px';
                 container.appendChild(el);
-                // cleanup after animation
                 setTimeout(() => {
                     el.remove();
                 }, (rise * 1000) + 1200);
@@ -1102,11 +1120,8 @@
 
             // initial render + periodic generation
             renderWordCloud();
-            // make a few balloons immediately
             for (let i=0;i<6;i++) setTimeout(makeBalloon, i*450);
-            // then create them periodically
             setInterval(() => {
-                // sometimes spawn a small burst
                 const burst = Math.random() < 0.25;
                 const count = burst ? 4 + Math.floor(Math.random()*6) : 1 + Math.floor(Math.random()*2);
                 for (let i=0;i<count;i++) setTimeout(makeBalloon, i*220);
@@ -1115,12 +1130,8 @@
 
         /* --- Locked recording logic --- */
         (function(){
-            // NOTE: This is client-side password protection (editable in the page).
-            // If you want server-side protection, we can wire this to a backend.
             const RECORDING_SESSION_KEY = 'privateRecordingUnlocked';
-            // Change this default password by editing the string below.
             const CORRECT_PASSWORD = 'peach123';
-            // Set the recording file path here (relative or absolute). The src will be assigned only after unlock.
             const RECORDING_SRC = 'recording.mp3';
 
             const unlockBtn = document.getElementById('unlockRecordingBtn');
@@ -1135,21 +1146,17 @@
             }
 
             function unlockRecording() {
-                // reveal audio player and set source
                 if (!document.getElementById('privateAudio')) {
                     const audio = document.createElement('audio');
                     audio.id = 'privateAudio';
                     audio.controls = true;
                     audio.style.width = '100%';
-                    // store src in a data attribute until unlocked
                     audio.src = RECORDING_SRC;
-                    // replace placeholder
                     placeholder.style.display = 'none';
                     overlay.style.display = 'none';
                     const box = document.getElementById('recordingBox');
                     box.appendChild(audio);
 
-                    // Add a small download link for convenience
                     const dl = document.createElement('a');
                     dl.className = 'download-link';
                     dl.href = RECORDING_SRC;
@@ -1172,12 +1179,10 @@
                     unlockRecording();
                 } else {
                     showMessage('Incorrect password', '#ffd3d3');
-                    // small shake
                     overlay.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-6px)' }, { transform: 'translateY(0)' }], { duration: 250 });
                 }
             });
 
-            // allow Enter key
             pwdInput.addEventListener('keydown', (ev) => {
                 if (ev.key === 'Enter') {
                     ev.preventDefault();
@@ -1185,7 +1190,6 @@
                 }
             });
 
-            // If session unlocked previously, unlock automatically
             if (sessionStorage.getItem(RECORDING_SESSION_KEY)) {
                 unlockRecording();
             }
